@@ -73,3 +73,33 @@ piano-3.wav Note de piano
   └──────────────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
    Astuce : Pour créer src/components/Button.tsx depuis n'importe où, faites <leader>nf et tapez le chemin complet depuis la racine du projet.
+
+
+
+● ✅ Aucune erreur. Voici ce qui change :
+
+  Avant
+
+  Taper :sav → rien ou suggestion basique
+
+  Après
+
+  Taper :sav → popup avec :saveas, :save et le chemin du fichier
+
+  ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  Ce qui a été ajouté :
+
+  ┌────────────────────────┬─────────────────────────────────────────────────────────────────┐
+  │ Source                 │ Activée quand                                                   │
+  ├────────────────────────┼─────────────────────────────────────────────────────────────────┤
+  │ cmp-cmdline            │ Toutes les commandes : (:saveas, :bufdo, :set, :lua…)           │
+  ├────────────────────────┼─────────────────────────────────────────────────────────────────┤
+  │ cmp-path en cmdline    │ Chemins de fichiers après :e, :saveas…                          │
+  ├────────────────────────┼─────────────────────────────────────────────────────────────────┤
+  │ cmp-buffer en search   │ Mots du buffer courant lors d'une recherche /                   │
+  ├────────────────────────┼─────────────────────────────────────────────────────────────────┤
+  │ wildmenu natif         │ Fallback popup si cmp n'est pas encore chargé                   │
+  └────────────────────────┴─────────────────────────────────────────────────────────────────┘
+
+  Navigation dans le popup : Tab / Shift+Tab ou Ctrl+j / Ctrl+k.

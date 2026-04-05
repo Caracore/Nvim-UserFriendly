@@ -3,11 +3,12 @@ return {
   -- Moteur d'autocomplétion
   {
     "hrsh7th/nvim-cmp",
-    event = "InsertEnter",   -- ne charge qu'en mode insertion
+    event = { "InsertEnter", "CmdlineEnter" },  -- aussi actif en ligne de commande
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",    -- source LSP
       "hrsh7th/cmp-buffer",      -- source mots du buffer
       "hrsh7th/cmp-path",        -- source chemins fichiers
+      "hrsh7th/cmp-cmdline",     -- source commandes Neovim (:saveas, :write, etc.)
       "saadparwaiz1/cmp_luasnip", -- source snippets
       {
         "L3MON4D3/LuaSnip",
@@ -22,6 +23,7 @@ return {
       local luasnip = require("luasnip")
       local U       = require("config.user").lsp.completion
 
+      -- ── Complétion en mode insertion ────────────────────────────────
       cmp.setup({
         preselect = U.preselect and cmp.PreselectMode.Item or cmp.PreselectMode.None,
 
@@ -85,14 +87,41 @@ return {
             }
             item.kind = (icons[item.kind] or "") .. " " .. item.kind
             item.menu = ({
-              nvim_lsp = "[LSP]",
-              luasnip  = "[Snip]",
-              buffer   = "[Buf]",
-              path     = "[Path]",
+              nvim_lsp       = "[LSP]",
+              luasnip        = "[Snip]",
+              buffer         = "[Buf]",
+              path           = "[Path]",
+              cmdline        = "[Cmd]",
+              cmdline_history = "[Hist]",
             })[entry.source.name]
             return item
           end,
         },
+      })
+
+      -- ── Complétion en recherche / (contenu du buffer) ───────────────
+      cmp.setup.cmdline("/", {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+          { name = "buffer", max_item_count = 10 },
+        },
+      })
+
+      -- ── Complétion en ligne de commande : (toutes les commandes nvim) ─
+      -- Inclut : :saveas, :write, :bufdo, :lua, :set, chemins, etc.
+      cmp.setup.cmdline(":", {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+          { name = "path",    max_item_count = 10 },
+        }, {
+          {
+            name = "cmdline",
+            max_item_count = 30,
+            option = {
+              ignore_cmds = { "Man", "!" },  -- évite les faux positifs shell
+            },
+          },
+        }),
       })
     end,
   },

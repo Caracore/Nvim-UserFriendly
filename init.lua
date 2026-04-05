@@ -21,6 +21,12 @@ vim.opt.termguicolors  = true
 vim.opt.signcolumn     = "yes"
 vim.opt.cmdheight      = 1  -- 0 cause des glitches avec which-key/noice
 
+-- Wildmenu — complétion native enrichie (fallback si cmp non actif)
+vim.opt.wildmenu       = true
+vim.opt.wildmode       = "longest:full,full"  -- complète le plus long, puis liste tout
+vim.opt.wildoptions    = "pum"                -- popup menu au lieu de la barre du bas
+vim.opt.pumheight      = 15                   -- hauteur max du popup
+
 -- Curseur
 local cursor_map = { block = "block", line = "ver25", underline = "hor20" }
 vim.opt.guicursor = "n-v-c:" .. (cursor_map[U.cursor.style] or "block")
