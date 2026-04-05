@@ -151,7 +151,44 @@ return {
     -- Sauvegarder (normal + insertion + visuel)
     { "<C-s>", "<cmd>write<cr>", "Sauvegarder" },
     -- Quitter
-    { "<leader>q",  "<cmd>qa<cr>",                      "Quitter" },
+    { "<leader>q",  "<cmd>qa<cr>", "Quitter" },
+
+    -- ── Édition ───────────────────────────────────────────────────────
+    -- Déplacer une ligne vers le haut / bas (Alt+j / Alt+k)
+    { "<A-j>", "<cmd>m .+1<cr>==",  "Déplacer ligne bas" },
+    { "<A-k>", "<cmd>m .-2<cr>==",  "Déplacer ligne haut" },
+    -- Dupliquer la ligne sous le curseur
+    { "<leader>d", "<cmd>t.<cr>",   "Dupliquer ligne" },
+    -- Supprimer sans polluer le registre (vers le registre noir _)
+    { "<leader>D", '"_dd',          "Supprimer (sans registre)" },
+    -- Coller sans écraser le registre en mode visuel
+    -- (défini dans init.lua car il faut mode "x")
+    -- Meilleure indentation en mode visuel (reste en sélection)
+    -- (défini dans init.lua)
+
+    -- ── Marks ─────────────────────────────────────────────────────────
+    -- (marks.nvim ajoute les keymaps natifs m{x}, '{x}, dm{x} etc.)
+    -- Liste tous les marks du buffer
+    { "<leader>mm", "<cmd>MarksListBuf<cr>",  "Liste marks buffer" },
+    { "<leader>mg", "<cmd>MarksListGlobal<cr>", "Liste marks globaux" },
+
+    -- ── Search & Replace ──────────────────────────────────────────────
+    { "<leader>sr", "<cmd>GrugFar<cr>", "Search & Replace projet" },
+    -- Vider le surlignage de recherche
+    { "<Esc>",      "<cmd>nohlsearch<cr>", "Effacer surbrillance" },
+
+    -- ── Navigation ────────────────────────────────────────────────────
+    -- Centrer l'écran après saut (n/N/Ctrl+d/Ctrl+u)
+    { "n",     "nzzzv",   "Suivant (centré)" },
+    { "N",     "Nzzzv",   "Précédent (centré)" },
+    { "<C-d>", "<C-d>zz", "Demi-page bas (centré)" },
+    { "<C-u>", "<C-u>zz", "Demi-page haut (centré)" },
+    -- Jump list
+    { "<C-o>", "<C-o>",   "Retour dans jump list" },
+    { "<C-i>", "<C-i>",   "Avant dans jump list" },
+
+    -- ── Buffers ───────────────────────────────────────────────────────
+    { "<leader>ba", "<cmd>bufdo bdelete<cr>",  "Fermer tous les buffers" },
   },
 
   -- ---------------------------------------------------------------

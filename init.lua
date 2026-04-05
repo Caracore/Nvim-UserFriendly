@@ -50,6 +50,54 @@ end
 vim.keymap.set("i", "<C-s>", "<cmd>write<cr>", { desc = "Sauvegarder", silent = true })
 vim.keymap.set("v", "<C-s>", "<cmd>write<cr>", { desc = "Sauvegarder", silent = true })
 
+-- ── Keymaps édition mode visuel ──────────────────────────────────────────
+-- Déplacer une sélection vers le haut / bas
+vim.keymap.set("v", "<A-j>", ":m '>+1<cr>gv=gv", { desc = "Déplacer sélection bas",  silent = true })
+vim.keymap.set("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Déplacer sélection haut", silent = true })
+-- Rester en mode visuel après indentation
+vim.keymap.set("v", "<",     "<gv",               { desc = "Désindenter",             silent = true })
+vim.keymap.set("v", ">",     ">gv",               { desc = "Indenter",                silent = true })
+-- Coller sans écraser le registre (le texte collé repart dans _)
+vim.keymap.set("x", "p",     '"_dP',              { desc = "Coller (sans polluer registre)", silent = true })
+
+-- ── Créer fichier / dossier ───────────────────────────────────────────────
+local function create_file()
+  vim.ui.input({ prompt = "Nouveau fichier : ", default = vim.fn.expand("%:h") .. "/" }, function(path)
+    if not path or path == "" then return end
+    -- Créer les dossiers parents si nécessaire
+    local dir = vim.fn.fnamemodify(path, ":h")
+    if vim.fn.isdirectory(dir) == 0 then
+      vim.fn.mkdir(dir, "p")
+    end
+    if vim.fn.filereadable(path) == 1 then
+      vim.notify("Fichier déjà existant : " .. path, vim.log.levels.WARN)
+    else
+      vim.fn.writefile({}, path)
+      vim.notify("Fichier créé : " .. path, vim.log.levels.INFO)
+    end
+    vim.cmd("edit " .. vim.fn.fnameescape(path))
+  end)
+end
+
+local function create_dir()
+  vim.ui.input({ prompt = "Nouveau dossier : ", default = vim.fn.expand("%:h") .. "/" }, function(path)
+    if not path or path == "" then return end
+    -- Retirer le slash final s'il y en a un (pour l'affichage propre)
+    path = path:gsub("/$", "")
+    if vim.fn.isdirectory(path) == 1 then
+      vim.notify("Dossier déjà existant : " .. path, vim.log.levels.WARN)
+    else
+      vim.fn.mkdir(path, "p")
+      vim.notify("Dossier créé : " .. path, vim.log.levels.INFO)
+    end
+    -- Rafraîchir Neo-tree si ouvert
+    pcall(function() require("neo-tree.sources.manager").refresh("filesystem") end)
+  end)
+end
+
+vim.keymap.set("n", "<leader>nf", create_file, { desc = "Nouveau fichier", silent = true })
+vim.keymap.set("n", "<leader>nd", create_dir,  { desc = "Nouveau dossier", silent = true })
+
 -- Notification + son après chaque sauvegarde
 vim.api.nvim_create_autocmd("BufWritePost", {
   callback = function()

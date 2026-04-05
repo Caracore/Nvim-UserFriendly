@@ -7,99 +7,99 @@ return {
     opts  = { ui = { border = "rounded" } },
   },
 
-  -- Pont Mason ↔ lspconfig (installe + configure automatiquement)
+  -- Pont Mason ↔ lspconfig (installe les binaires des serveurs)
   {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
     opts = function()
       local U = require("config.user")
       return {
-        ensure_installed = U.lsp.servers,
-        automatic_installation = true,
+        ensure_installed    = U.lsp.servers,
+        automatic_enable    = false,  -- on gère nous-mêmes via vim.lsp.enable
       }
     end,
   },
 
-  -- Configuration LSP
+  -- Définitions des serveurs LSP (cmd, filetypes, root_dir…)
   {
     "neovim/nvim-lspconfig",
-    event        = { "BufReadPre", "BufNewFile" },  -- charge seulement à l'ouverture d'un fichier
+    event        = { "BufReadPre", "BufNewFile" },
     dependencies = {
       "williamboman/mason-lspconfig.nvim",
-      "hrsh7th/cmp-nvim-lsp",   -- capabilities LSP pour cmp
+      "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
-      local lspconfig  = require("lspconfig")
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      -- Keymaps LSP actifs uniquement quand un serveur est attaché
-      local on_attach = function(_, bufnr)
-        local map = function(key, cmd, desc)
-          vim.keymap.set("n", key, cmd, { buffer = bufnr, silent = true, desc = desc })
-        end
-
-        -- Navigation
-        map("gd",         vim.lsp.buf.definition,       "Aller à la définition")
-        map("gD",         vim.lsp.buf.declaration,      "Aller à la déclaration")
-        map("gr",         vim.lsp.buf.references,       "Références")
-        map("gi",         vim.lsp.buf.implementation,   "Implémentation")
-        map("K",          vim.lsp.buf.hover,            "Documentation")
-        map("<C-k>",      vim.lsp.buf.signature_help,   "Signature")
-        -- Actions
-        map("<leader>cr", vim.lsp.buf.rename,           "Renommer")
-        map("<leader>ca", vim.lsp.buf.code_action,      "Actions code")
-        map("<leader>cf", function() vim.lsp.buf.format({ async = true }) end, "Formater")
-        -- Diagnostics
-        map("<leader>xd", vim.diagnostic.open_float,    "Diagnostic détail")
-        map("[d",         vim.diagnostic.goto_prev,     "Diagnostic précédent")
-        map("]d",         vim.diagnostic.goto_next,     "Diagnostic suivant")
-        map("<leader>xl", "<cmd>Telescope diagnostics<cr>", "Liste diagnostics")
-      end
-
-      -- Icônes de diagnostic dans la gouttière
-      local signs = { Error = " ", Warn = " ", Hint = "󰌶 ", Info = " " }
-      for type, icon in pairs(signs) do
-        local hl = "DiagnosticSign" .. type
-        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-      end
-
-      vim.diagnostic.config({
-        virtual_text   = { prefix = "●" },
-        signs          = true,
-        underline      = true,
-        update_in_insert = false,   -- pas de diagnostics en mode insertion (perf)
-        severity_sort  = true,
+      -- ── Keymaps LSP via autocmd LspAttach (API 0.11) ────────────────
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("NvimLspKeymaps", { clear = true }),
+        callback = function(args)
+          local bufnr = args.buf
+          local map   = function(key, cmd, desc)
+            vim.keymap.set("n", key, cmd, { buffer = bufnr, silent = true, desc = desc })
+          end
+          -- Navigation
+          map("gd",         vim.lsp.buf.definition,                    "Aller à la définition")
+          map("gD",         vim.lsp.buf.declaration,                   "Aller à la déclaration")
+          map("gr",         vim.lsp.buf.references,                    "Références")
+          map("gi",         vim.lsp.buf.implementation,                "Implémentation")
+          map("K",          vim.lsp.buf.hover,                         "Documentation")
+          map("<C-k>",      vim.lsp.buf.signature_help,                "Signature")
+          -- Actions
+          map("<leader>cr", vim.lsp.buf.rename,                        "Renommer")
+          map("<leader>ca", vim.lsp.buf.code_action,                   "Actions code")
+          map("<leader>cf", function() vim.lsp.buf.format({ async = true }) end, "Formater")
+          -- Diagnostics
+          map("<leader>xd", vim.diagnostic.open_float,                 "Diagnostic détail")
+          map("[d",         function() vim.diagnostic.jump({ count = -1 }) end, "Diagnostic précédent")
+          map("]d",         function() vim.diagnostic.jump({ count =  1 }) end, "Diagnostic suivant")
+          map("<leader>xl", "<cmd>Telescope diagnostics<cr>",          "Liste diagnostics")
+        end,
       })
 
-      -- Config spéciale pour lua_ls (reconnaît l'API Neovim)
-      local server_settings = {
-        lua_ls = {
-          settings = {
-            Lua = {
-              runtime     = { version = "LuaJIT" },
-              workspace   = { checkThirdParty = false },
-              diagnostics = { globals = { "vim" } },
-              telemetry   = { enable = false },
-            },
+      -- ── Icônes dans la gouttière ─────────────────────────────────────
+      vim.diagnostic.config({
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = " ",
+            [vim.diagnostic.severity.WARN]  = " ",
+            [vim.diagnostic.severity.HINT]  = "󰌶 ",
+            [vim.diagnostic.severity.INFO]  = " ",
           },
         },
-        pyright = {
-          settings = {
-            python = {
-              analysis = { typeCheckingMode = "basic" },  -- "off" | "basic" | "strict"
-            },
-          },
-        },
-      }
+        virtual_text     = { prefix = "●" },
+        underline        = true,
+        update_in_insert = false,
+        severity_sort    = true,
+      })
 
-      -- Active chaque serveur listé dans user.lua
+      -- ── Capabilities globales (toutes langues) ───────────────────────
+      vim.lsp.config("*", { capabilities = capabilities })
+
+      -- ── Config spécifique par serveur ────────────────────────────────
+      vim.lsp.config("lua_ls", {
+        settings = {
+          Lua = {
+            runtime     = { version = "LuaJIT" },
+            workspace   = { checkThirdParty = false },
+            diagnostics = { globals = { "vim" } },
+            telemetry   = { enable = false },
+          },
+        },
+      })
+
+      vim.lsp.config("pyright", {
+        settings = {
+          python = {
+            analysis = { typeCheckingMode = "basic" },
+          },
+        },
+      })
+
+      -- ── Activation de tous les serveurs listés dans user.lua ─────────
       local U = require("config.user")
-      for _, server in ipairs(U.lsp.servers) do
-        local config = server_settings[server] or {}
-        config.capabilities = capabilities
-        config.on_attach    = on_attach
-        lspconfig[server].setup(config)
-      end
+      vim.lsp.enable(U.lsp.servers)
     end,
   },
 }
