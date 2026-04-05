@@ -207,7 +207,7 @@ return {
     copilot    = false,  -- GitHub Copilot    → activer : true
     supermaven = false,  -- Supermaven AI     → activer : true
     prettier   = false,  -- Prettier/conform  → activer : true
-    spotify    = false,  -- nvim-spotify      → activer : true (nécessite spotify-tui + golang)
+    spotify    = true,   -- nvim-spotify      → activer : true (nécessite : sudo apt install playerctl)
   },
 
   -- ---------------------------------------------------------------

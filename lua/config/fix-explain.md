@@ -220,3 +220,16 @@ dans ton README :
 
 Go n'est utilisé qu'une fois à la compilation (~30s), après ça il peut
 même être désinstallé.
+
+Dans nvim tu peux maintenant faire :
+
+ - g4 → ligne 4
+ - g42 → ligne 42  
+ - g150 → ligne 150
+
+En bas de l'écran tu vois goto: 42 s'afficher en temps réel pendant que tu tapes les chiffres. Dès que tu appuies sur une touche
+non-numérique (ou Entrée), ça saute à la ligne.
+
+ Note : gg et G restent intacts. Le seul truc overridé c'est g0–g9 qui allaient au début de la ligne screen (utile seulement 
+avec
+ wrap = true, que tu as désactivé).

@@ -139,3 +139,31 @@ vim.api.nvim_create_autocmd("BufWritePost", {
     end
   end,
 })
+
+-- ── g + chiffres → aller à la ligne ──────────────────────────────────────
+-- Exemples : g1  g42  g100
+-- Les touches g0-g9 captent le premier chiffre, puis accumulent les suivants.
+for i = 0, 9 do
+  vim.keymap.set("n", "g" .. i, function()
+    local num = tostring(i)
+    -- Affiche le numéro composé en bas
+    vim.api.nvim_echo({ { "goto: " .. num, "MoreMsg" } }, false, {})
+    while true do
+      local ok, ch = pcall(vim.fn.getchar)
+      if not ok then break end
+      local c = type(ch) == "number" and vim.fn.nr2char(ch) or ch
+      if c:match("%d") then
+        num = num .. c
+        vim.api.nvim_echo({ { "goto: " .. num, "MoreMsg" } }, false, {})
+      else
+        break
+      end
+    end
+    vim.api.nvim_echo({ { "", "Normal" } }, false, {})
+    local line = tonumber(num)
+    if line then
+      local max = vim.api.nvim_buf_line_count(0)
+      vim.api.nvim_win_set_cursor(0, { math.min(line, max), 0 })
+    end
+  end, { desc = "Goto ligne " .. i .. "…" })
+end

@@ -57,13 +57,7 @@ return {
             },
             -- Affiche la musique Spotify en cours (si extra activé)
             {
-              function()
-                local ok, status = pcall(require, "nvim-spotify")
-                if ok and status and status.status then
-                  return status.status.listen() or ""
-                end
-                return ""
-              end,
+              function() return _G.SpotifyStatus and _G.SpotifyStatus() or "" end,
               cond = function()
                 local ok, U = pcall(require, "config.user")
                 return ok and (U.extras or {}).spotify == true
