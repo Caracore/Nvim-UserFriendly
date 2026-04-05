@@ -67,8 +67,7 @@ return {
     { "<leader>wv", "<cmd>vsplit<cr>",                  "Split vertical" },
     { "<leader>wh", "<cmd>split<cr>",                   "Split horizontal" },
     { "<leader>wq", "<cmd>close<cr>",                   "Fermer fenêtre" },
-    -- Navigation entre fenêtres (Ctrl + direction)
-    { "<C-h>",      "<C-w>h",                           "Fenêtre gauche" },
+    -- Navigation entre fenêtres (sans C-h, conflit avec Backspace terminal)
     { "<C-l>",      "<C-w>l",                           "Fenêtre droite" },
     { "<C-j>",      "<C-w>j",                           "Fenêtre bas" },
     { "<C-k>",      "<C-w>k",                           "Fenêtre haut" },
