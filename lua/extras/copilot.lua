@@ -9,6 +9,7 @@ return {
     "zbirenbaum/copilot.lua",
     cmd   = "Copilot",
     event = "InsertEnter",
+    cond  = function() return require("config.user").extras.copilot end,
     opts  = {
       suggestion = {
         enabled      = true,
@@ -29,6 +30,7 @@ return {
   {
     "zbirenbaum/copilot-cmp",
     dependencies = { "zbirenbaum/copilot.lua" },
+    cond = function() return require("config.user").extras.copilot end,
     config = function()
       require("copilot_cmp").setup()
       -- Injecte la source copilot dans cmp si déjà chargé

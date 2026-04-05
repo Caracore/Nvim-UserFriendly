@@ -7,6 +7,7 @@ return {
   {
     "supermaven-inc/supermaven-nvim",
     event = "InsertEnter",
+    cond  = function() return require("config.user").extras.supermaven end,
     opts  = {
       keymaps = {
         accept_suggestion = "<M-CR>",   -- Alt+Entrée pour accepter

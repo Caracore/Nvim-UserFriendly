@@ -45,3 +45,7 @@ require("lazy").setup("plugins", {
 for _, km in ipairs(U.keymaps) do
   vim.keymap.set("n", km[1], km[2], { desc = km[3], silent = true })
 end
+
+-- Ctrl+S en insertion et visuel (write sans quitter le mode)
+vim.keymap.set("i", "<C-s>", "<cmd>write<cr>", { desc = "Sauvegarder", silent = true })
+vim.keymap.set("v", "<C-s>", "<cmd>write<cr>", { desc = "Sauvegarder", silent = true })

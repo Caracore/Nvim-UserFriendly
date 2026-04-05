@@ -9,6 +9,7 @@ return {
     "stevearc/conform.nvim",
     event = { "BufWritePre" },
     cmd   = { "ConformInfo", "Format" },
+    cond  = function() return require("config.user").extras.prettier end,
     keys  = {
       {
         "<leader>cf",

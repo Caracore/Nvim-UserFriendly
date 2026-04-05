@@ -19,7 +19,7 @@ return {
   --    "gruvbox"            "rose-pine"           "rose-pine-moon"
   --    "kanagawa"           "nightfox"            "nordfox"
   -- ---------------------------------------------------------------
-  colorscheme = "rose-pine",
+  colorscheme = "ember",
 
   -- ---------------------------------------------------------------
   --  TRANSPARENCE
@@ -34,7 +34,7 @@ return {
   --  Smear  : animation de déplacement du curseur
   -- ---------------------------------------------------------------
   cursor = {
-    style = "block",   -- "block" | "line" | "underline"
+    style = "line",   -- "block" | "line" | "underline"
 
     smear = {
       enabled  = true,
@@ -125,23 +125,27 @@ return {
     { "<C-k>",      "<C-w>k",            "Fenêtre haut" },
     -- Focus neo-tree
     { "<leader>o",  "<cmd>Neotree focus<cr>", "Focus tree" },
-    -- Sauvegarder
-    { "<C-s>",      "<cmd>w<cr>",                       "Sauvegarder" },
+    -- Sauvegarder (normal + insertion + visuel)
+    { "<C-s>", "<cmd>write<cr>", "Sauvegarder" },
     -- Quitter
     { "<leader>q",  "<cmd>qa<cr>",                      "Quitter" },
   },
 
   -- ---------------------------------------------------------------
   --  NVIM+ — Modules optionnels
-  --  Mettez true/false pour activer ou désactiver chaque addon.
+  --  Tout est FALSE par défaut — activez uniquement ce dont vous avez besoin.
   --
   --  ⚠ Copilot et Supermaven font la même chose (IA inline).
-  --    Activez-en UN seul à la fois.
+  --    Activez-en UN seul à la fois maximum.
+  --
+  --  Copilot    : nécessite un abonnement GitHub + :Copilot setup
+  --  Supermaven : gratuit mais demande une activation au 1er lancement
+  --  Prettier   : nécessite  npm install -g prettier
   -- ---------------------------------------------------------------
   extras = {
-    copilot    = false,  -- GitHub Copilot    (nécessite abonnement GitHub)
-    supermaven = true,   -- Supermaven AI      (gratuit, très rapide)
-    prettier   = true,   -- Prettier + conform (formatters multi-langages)
+    copilot    = false,  -- GitHub Copilot    → activer : true
+    supermaven = false,  -- Supermaven AI     → activer : true
+    prettier   = false,  -- Prettier/conform  → activer : true
   },
 
   -- ---------------------------------------------------------------
