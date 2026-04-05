@@ -103,3 +103,120 @@ piano-3.wav Note de piano
   └────────────────────────┴─────────────────────────────────────────────────────────────────┘
 
   Navigation dans le popup : Tab / Shift+Tab ou Ctrl+j / Ctrl+k.
+
+
+● Tout est en place. Voici le résumé :
+
+  -----------------------------------------------------------------------
+
+  Ce qui a été fait
+
+  3 fichiers modifiés, 1 créé :
+
+  ┌──────────────────────────────┬───────────────────────────────────────┐
+  │ Fichier                      │ Modification                          │
+  ├──────────────────────────────┼───────────────────────────────────────┤
+  │ lua/extras/spotify.lua       │ ✅ Créé — plugin + keymaps            │
+  ├──────────────────────────────┼───────────────────────────────────────┤
+  │ lua/plugins/extras.lua       │ + entrée spotify dans la table        │
+  ├──────────────────────────────┼───────────────────────────────────────┤
+  │ lua/config/user.lua          │ + spotify = false dans extras         │
+  ├──────────────────────────────┼───────────────────────────────────────┤
+  │ lua/plugins/statusline.lua   │ + composant lualine conditionnel      │
+  │                              │ (vert Spotify)                        │
+  └──────────────────────────────┴───────────────────────────────────────┘
+
+  -----------------------------------------------------------------------
+
+  Pour activer
+
+  Dans user.lua :
+
+   spotify = true,  -- nécessite spotify-tui + golang
+
+  Prérequis à installer
+
+   # Rust requis pour cargo
+   cargo install spotify-tui
+   # Ou via snap
+   snap install spt
+   
+   # Golang
+   sudo apt install golang
+
+  Puis lancer spt une première fois pour l'authentification Spotify.
+
+  Keymaps (<leader>m)
+
+  ┌──────────────┬─────────────────────┐
+  │ Touche       │ Action              │
+  ├──────────────┼─────────────────────┤
+  │ <leader>mo   │ Recherche Telescope │
+  ├──────────────┼─────────────────────┤
+  │ <leader>mp   │ Pause / Play        │
+  ├──────────────┼─────────────────────┤
+  │ <leader>mn   │ Piste suivante      │
+  ├──────────────┼─────────────────────┤
+  │ <leader>mb   │ Piste précédente    │
+  ├──────────────┼─────────────────────┤
+  │ <leader>ms   │ Sauvegarder piste   │
+  ├──────────────┼─────────────────────┤
+  │ <leader>mr   │ Shuffle             │
+  ├──────────────┼─────────────────────┤
+  │ <leader>md   │ Choisir device      │
+  └──────────────┴─────────────────────┘
+
+ Le plugin embarque un binaire Go dans son dossier go/. Quand tu fais 
+  build = "make", ça compile ce binaire en local :
+
+   cd ./go; go build -o ../bin/NvimSpotify
+
+  Ce binaire NvimSpotify est le pont entre Neovim et l'API Spotify (via
+  spotify-tui). C'est lui qui gère les appels API en arrière-plan — c'est
+  d'ailleurs pourquoi il n'impacte pas les perfs de Neovim : tout tourne
+  dans ce process séparé.
+
+  En résumé : Go est nécessaire une seule fois à l'installation pour
+  compiler le binaire. Une fois compilé, plus besoin de Go.
+
+  Go est indispensable pour chaque utilisateur. Voici pourquoi :
+
+Quand lazy.nvim installe le plugin, il exécute build = "make" sur la
+machine du nouvel utilisateur. Le binaire compilé va dans :
+
+ ~/.local/share/nvim/lazy/nvim-spotify/bin/NvimSpotify
+
+Ce dossier fait partie de lazy's data, pas de ton repo de config. Donc
+il n'est pas partagé.
+
+-----------------------------------------------------------------------
+
+Options :
+
+┌───────────────────────────┬────────────┬─────────────────────────────┐
+│ Option                    │ Pro        │ Con                         │
+├───────────────────────────┼────────────┼─────────────────────────────┤
+│ Chaque user installe Go   │ Simple,    │ Dépendance à installer      │
+│                           │ propre     │                             │
+├───────────────────────────┼────────────┼─────────────────────────────┤
+│ Pré-compiler et shipper   │ Pas besoin │ Binaire Linux x86           │
+│ le binaire dans le repo   │ de Go      │ uniquement, lourd, risque   │
+│                           │            │ sécu                        │
+├───────────────────────────┼────────────┼─────────────────────────────┤
+│ Utiliser un autre plugin  │ Zéro       │ Moins de features           │
+│                           │ dépendance │                             │
+│                           │ Go         │                             │
+└───────────────────────────┴────────────┴─────────────────────────────┘
+
+-----------------------------------------------------------------------
+
+La meilleure solution pour tes users serait de documenter clairement
+dans ton README :
+
+ Pour activer spotify = true dans user.lua, installer au préalable :
+ 
+  sudo apt install golang   # ou: snap install go --classic
+  snap install spt          # spotify-tui
+
+Go n'est utilisé qu'une fois à la compilation (~30s), après ça il peut
+même être désinstallé.

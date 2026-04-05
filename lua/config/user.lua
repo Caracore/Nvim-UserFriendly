@@ -19,15 +19,16 @@ return {
   --    "gruvbox"            "rose-pine"           "rose-pine-moon"
   --    "kanagawa"           "nightfox"            "nordfox"
   -- ---------------------------------------------------------------
-  colorscheme = "ember",
+  colorscheme = "cyber",
 
   -- ---------------------------------------------------------------
   --  TRANSPARENCE
   --  true  → fond transparent (dépend du terminal)
   --  false → fond opaque
   -- ---------------------------------------------------------------
-  -- transparent = false,
-  transparent = true,
+  -- transparent = true,
+  -- Ton terminal doit être aussi transparent.
+  transparent = false,
 
   -- ---------------------------------------------------------------
   --  CURSEUR
@@ -35,7 +36,7 @@ return {
   --  Smear  : animation de déplacement du curseur
   -- ---------------------------------------------------------------
   cursor = {
-    style = "line",   -- "block" | "line" | "underline"
+    style = "underline",   -- "block" | "line" | "underline"
 
     smear = {
       enabled  = true,
@@ -45,7 +46,7 @@ return {
       --   "fire"     → curseur en feu 🔥 (particules + couleur orange)
       --   "fast"     → smear rapide et nerveux
       --   "smooth"   → curseur lisse sans traîne
-      preset = "fire",
+      preset = "fast",
 
       -- Couleur du smear (ignorée si preset = "fire")
       --   "auto"       → suit le colorscheme
@@ -206,6 +207,7 @@ return {
     copilot    = false,  -- GitHub Copilot    → activer : true
     supermaven = false,  -- Supermaven AI     → activer : true
     prettier   = false,  -- Prettier/conform  → activer : true
+    spotify    = false,  -- nvim-spotify      → activer : true (nécessite spotify-tui + golang)
   },
 
   -- ---------------------------------------------------------------

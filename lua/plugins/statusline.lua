@@ -55,6 +55,21 @@ return {
               end,
               color = { fg = "#ff9e64" },
             },
+            -- Affiche la musique Spotify en cours (si extra activé)
+            {
+              function()
+                local ok, status = pcall(require, "nvim-spotify")
+                if ok and status and status.status then
+                  return status.status.listen() or ""
+                end
+                return ""
+              end,
+              cond = function()
+                local ok, U = pcall(require, "config.user")
+                return ok and (U.extras or {}).spotify == true
+              end,
+              color = { fg = "#1db954" },  -- vert Spotify
+            },
             { "filetype", icon_only = false },
           },
           lualine_y = {

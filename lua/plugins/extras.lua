@@ -17,6 +17,7 @@ local available = {
   copilot    = "extras.copilot",
   supermaven = "extras.supermaven",
   prettier   = "extras.prettier",
+  spotify    = "extras.spotify",
 }
 
 -- Vérifie les conflits d'IA
