@@ -2,17 +2,29 @@
 vim.g.mapleader      = " "
 vim.g.maplocalleader = " "
 
--- Options de base
-vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.expandtab = true
-vim.opt.termguicolors = true
-vim.opt.signcolumn = "yes"
-vim.opt.scrolloff = 8
-vim.opt.wrap = false
-vim.opt.cmdheight = 0  -- cache la cmdline native (noice la remplace)
+-- Charge les options et keymaps depuis user.lua
+local U = require("config.user")
+local E = U.editor
+
+vim.opt.number         = E.line_numbers
+vim.opt.relativenumber = E.relative_nums
+vim.opt.tabstop        = E.tab_size
+vim.opt.shiftwidth     = E.tab_size
+vim.opt.expandtab      = true
+vim.opt.wrap           = E.wrap
+vim.opt.scrolloff      = E.scroll_off
+vim.opt.termguicolors  = true
+vim.opt.signcolumn     = "yes"
+vim.opt.cmdheight      = 0
+
+-- Curseur
+local cursor_map = { block = "block", line = "ver25", underline = "hor20" }
+vim.opt.guicursor = "n-v-c:" .. (cursor_map[U.cursor] or "block")
+
+-- Keymaps depuis user.lua
+for _, km in ipairs(U.keymaps) do
+  vim.keymap.set("n", km[1], km[2], { desc = km[3], silent = true })
+end
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"

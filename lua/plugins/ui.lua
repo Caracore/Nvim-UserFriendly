@@ -35,7 +35,7 @@ return {
     },
   },
 
-  -- Arborescence à droite
+  -- Arborescence (position et largeur depuis user.lua)
   {
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v3.x",
@@ -44,26 +44,18 @@ return {
       "nvim-tree/nvim-web-devicons",
       "MunifTanjim/nui.nvim",
     },
-    keys = {
-      { "<leader>e", "<cmd>Neotree toggle<cr>", desc = "Toggle file tree" },
-    },
-    opts = {
-      window = {
-        position = "right",
-        width = 35,
-      },
-      filesystem = {
-        follow_current_file = { enabled = true },
-        hijack_netrw_behavior = "open_current",
-      },
-    },
+    opts = function()
+      local U = require("config.user")
+      return {
+        window = {
+          position = U.tree.position,
+          width    = U.tree.width,
+        },
+        filesystem = {
+          follow_current_file    = { enabled = true },
+          hijack_netrw_behavior  = "open_current",
+        },
+      }
+    end,
   },
-
-  -- Colorscheme (optionnel, décommenter pour activer)
-  -- {
-  --   "folke/tokyonight.nvim",
-  --   lazy = false,
-  --   priority = 1000,
-  --   config = function() vim.cmd.colorscheme("tokyonight-night") end,
-  -- },
 }
