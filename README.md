@@ -39,7 +39,7 @@
 ### Option A — Script automatique (recommandé)
 
 ```bash
-git clone https://github.com/VOTRE_USERNAME/Nvim-self.git ~/nvim-setup
+git clone https://github.com/Caracore/Nvim-UserFriendly.git ~/nvim-setup
 bash ~/nvim-setup/install.sh
 ```
 
@@ -50,7 +50,7 @@ bash ~/nvim-setup/install.sh
 [ -d ~/.config/nvim ] && mv ~/.config/nvim ~/.config/nvim.bak
 
 # 2. Cloner ce dépôt dans le dossier de config Neovim
-git clone https://github.com/VOTRE_USERNAME/Nvim-self.git ~/.config/nvim
+git clone https://github.com/Caracore/Nvim-UserFriendly.git ~/.config/nvim
 
 # 3. Supprimer le script de backup (ne sert qu'au propriétaire)
 rm -f ~/.config/nvim/nvim-backup.sh
