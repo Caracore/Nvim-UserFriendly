@@ -23,7 +23,7 @@ vim.opt.cmdheight      = 1  -- 0 cause des glitches avec which-key/noice
 
 -- Curseur
 local cursor_map = { block = "block", line = "ver25", underline = "hor20" }
-vim.opt.guicursor = "n-v-c:" .. (cursor_map[U.cursor] or "block")
+vim.opt.guicursor = "n-v-c:" .. (cursor_map[U.cursor.style] or "block")
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"

@@ -24,9 +24,34 @@ return {
 
   -- ---------------------------------------------------------------
   --  CURSEUR
-  --  Styles : "block" | "line" | "underline"
+  --  Style  : "block" | "line" | "underline"
+  --  Smear  : animation de déplacement du curseur
   -- ---------------------------------------------------------------
-  cursor = "block",
+  cursor = {
+    style = "block",   -- "block" | "line" | "underline"
+
+    smear = {
+      enabled  = true,
+
+      -- Vitesse de l'animation (0.0 → 1.0)
+      --   0.1 = très lent/fluide   0.6 = rapide/nerveux
+      stiffness          = 0.3,
+      trailing_stiffness = 0.15,
+
+      -- Distance minimale (en colonnes) pour déclencher l'animation
+      distance_stop_animating = 0.5,
+
+      -- Couleur du smear : "auto" = suit le curseur, ou code hex ex: "#ff79c6"
+      color = "auto",
+
+      -- true  = cache le vrai curseur pendant l'animation (plus propre)
+      -- false = les deux sont visibles
+      hide_target = true,
+
+      -- Active le support des symboles legacy (terminaux anciens)
+      legacy_computing = false,
+    },
+  },
 
   -- ---------------------------------------------------------------
   --  EXPLORATEUR DE FICHIERS (neo-tree)
