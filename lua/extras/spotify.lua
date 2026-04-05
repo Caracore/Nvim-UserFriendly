@@ -55,7 +55,31 @@ end, 1000)
 vim.keymap.set("n", "<leader>mp", function() playerctl({ "play-pause" }) end,       { silent = true, desc = "Spotify : pause/play" })
 vim.keymap.set("n", "<leader>mn", function() playerctl({ "next" }) end,             { silent = true, desc = "Spotify : piste suivante" })
 vim.keymap.set("n", "<leader>mb", function() playerctl({ "previous" }) end,         { silent = true, desc = "Spotify : piste précédente" })
-vim.keymap.set("n", "<leader>mr", function() playerctl({ "shuffle", "toggle" }) end,{ silent = true, desc = "Spotify : aléatoire" })
+vim.keymap.set("n", "<leader>mr", function()
+  vim.fn.jobstart(
+    { "playerctl", "--player=spotify", "shuffle", "Toggle" },
+    {
+      on_exit = function(_, code)
+        if code ~= 0 then
+          vim.notify("Spotify n'est pas disponible", vim.log.levels.WARN, { title = "Spotify" })
+          return
+        end
+        vim.fn.jobstart(
+          { "playerctl", "--player=spotify", "shuffle" },
+          {
+            stdout_buffered = true,
+            on_stdout = function(_, data)
+              if data and data[1] and data[1] ~= "" then
+                local state = data[1] == "On" and "🔀 Aléatoire activé" or "➡️ Aléatoire désactivé"
+                vim.notify(state, vim.log.levels.INFO, { title = "Spotify" })
+              end
+            end,
+          }
+        )
+      end,
+    }
+  )
+end, { silent = true, desc = "Spotify : aléatoire (toggle)" })
 vim.keymap.set("n", "<leader>m+", function() playerctl({ "volume", "0.1+" }) end,   { silent = true, desc = "Spotify : volume +" })
 vim.keymap.set("n", "<leader>m-", function() playerctl({ "volume", "0.1-" }) end,   { silent = true, desc = "Spotify : volume -" })
 
