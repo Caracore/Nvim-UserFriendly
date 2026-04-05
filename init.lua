@@ -2,6 +2,10 @@
 vim.g.mapleader      = " "
 vim.g.maplocalleader = " "
 
+-- Désactive netrw (on utilise neo-tree + telescope)
+vim.g.loaded_netrw       = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- Charge les options depuis user.lua
 local U = require("config.user")
 local E = U.editor
