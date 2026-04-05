@@ -67,30 +67,20 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 
     -- Son
     if S.sound == "bell" then
-      io.write("\a")          -- bip terminal universel
+      io.write("\a")
       io.flush()
     elseif S.sound == "system" then
-      local sounds = {
-        "/usr/share/sounds/freedesktop/stereo/message.oga",
-        "/usr/share/sounds/freedesktop/stereo/bell.oga",
-        "/usr/share/sounds/sound-icons/message.wav",
-      }
-      if vim.fn.executable("paplay") == 1 then
-        for _, f in ipairs(sounds) do
-          if vim.fn.filereadable(f) == 1 then
-            vim.fn.system("paplay " .. f .. " &")
-            break
-          end
-        end
-      elseif vim.fn.executable("aplay") == 1 then
-        for _, f in ipairs(sounds) do
-          if vim.fn.filereadable(f) == 1 then
-            vim.fn.system("aplay -q " .. f .. " &")
-            break
-          end
+      local file = S.sound_file or "/usr/share/sounds/freedesktop/stereo/complete.oga"
+      if vim.fn.filereadable(file) == 1 then
+        if vim.fn.executable("paplay") == 1 then
+          vim.fn.jobstart({ "paplay", file })
+        elseif vim.fn.executable("pw-play") == 1 then
+          vim.fn.jobstart({ "pw-play", file })
+        elseif vim.fn.executable("aplay") == 1 then
+          vim.fn.jobstart({ "aplay", "-q", file })
         end
       else
-        io.write("\a") io.flush()   -- fallback bell
+        io.write("\a") io.flush()  -- fallback bell si fichier introuvable
       end
     end
   end,

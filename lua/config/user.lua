@@ -26,7 +26,8 @@ return {
   --  true  → fond transparent (dépend du terminal)
   --  false → fond opaque
   -- ---------------------------------------------------------------
-  transparent = false,
+  -- transparent = false,
+  transparent = true,
 
   -- ---------------------------------------------------------------
   --  CURSEUR
@@ -77,8 +78,16 @@ return {
     -- Son à la sauvegarde
     --   false      → silence
     --   "bell"     → bip terminal (universel)
-    --   "system"   → son système Linux (paplay/aplay)
-    sound = "bell",
+    --   "system"   → son système via paplay (Linux)
+    sound = "system",
+
+    -- Fichier son utilisé quand sound = "system"
+    -- Autres options :
+    --   /usr/share/sounds/freedesktop/stereo/bell.oga
+    --   /usr/share/sounds/freedesktop/stereo/message.oga
+    --   /usr/share/sounds/freedesktop/stereo/message-new-instant.oga
+    --   /usr/share/sounds/sound-icons/piano-3.wav
+    sound_file = "/usr/share/sounds/freedesktop/stereo/complete.oga",
   },
 
   -- ---------------------------------------------------------------
