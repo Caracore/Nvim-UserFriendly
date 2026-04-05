@@ -8,6 +8,12 @@ return {
   -- ---------------------------------------------------------------
   --  THÈME
   --  Choix disponibles :
+  --   ── Thèmes custom (conçus pour ce setup) ──────────────────
+  --    "cyber"    → Cyberpunk neon  (bleu/rose/cyan électrique)
+  --    "forest"   → Nature sombre   (verts profonds + or ambré)
+  --    "ember"    → Feu & braises   (orange/rouge — idéal avec cursor fire)
+  --    "void"     → Ultra minimal   (quasi noir, distraction zéro)
+  --   ── Thèmes externes (installés via lazy) ──────────────────
   --    "tokyonight-night"   "tokyonight-storm"   "tokyonight-day"
   --    "catppuccin-mocha"   "catppuccin-macchiato" "catppuccin-latte"
   --    "gruvbox"            "rose-pine"           "rose-pine-moon"
@@ -33,22 +39,22 @@ return {
     smear = {
       enabled  = true,
 
-      -- Vitesse de l'animation (0.0 → 1.0)
-      --   0.1 = très lent/fluide   0.6 = rapide/nerveux
-      stiffness          = 0.3,
-      trailing_stiffness = 0.15,
+      -- Preset visuel :
+      --   "default"  → smear standard
+      --   "fire"     → curseur en feu 🔥 (particules + couleur orange)
+      --   "fast"     → smear rapide et nerveux
+      --   "smooth"   → curseur lisse sans traîne
+      preset = "fire",
 
-      -- Distance minimale (en colonnes) pour déclencher l'animation
-      distance_stop_animating = 0.5,
-
-      -- Couleur du smear : "auto" = suit le curseur, ou code hex ex: "#ff79c6"
+      -- Couleur du smear (ignorée si preset = "fire")
+      --   "auto"       → suit le colorscheme
+      --   "#rrggbb"    → couleur fixe
       color = "auto",
 
-      -- true  = cache le vrai curseur pendant l'animation (plus propre)
-      -- false = les deux sont visibles
+      -- true  = cache le vrai curseur pendant l'animation
       hide_target = true,
 
-      -- Active le support des symboles legacy (terminaux anciens)
+      -- Active le support des symboles legacy (terminaux anciens / Cascadia Code)
       legacy_computing = false,
     },
   },
@@ -103,17 +109,76 @@ return {
     { "<leader>bd", "<cmd>bdelete<cr>",                 "Fermer buffer" },
     { "<Tab>",      "<cmd>bnext<cr>",                   "Buffer suivant" },
     { "<S-Tab>",    "<cmd>bprevious<cr>",               "Buffer précédent" },
-    -- Fenêtres
-    { "<leader>wv", "<cmd>vsplit<cr>",                  "Split vertical" },
-    { "<leader>wh", "<cmd>split<cr>",                   "Split horizontal" },
-    { "<leader>wq", "<cmd>close<cr>",                   "Fermer fenêtre" },
-    -- Navigation entre fenêtres (sans C-h, conflit avec Backspace terminal)
-    { "<C-l>",      "<C-w>l",                           "Fenêtre droite" },
-    { "<C-j>",      "<C-w>j",                           "Fenêtre bas" },
-    { "<C-k>",      "<C-w>k",                           "Fenêtre haut" },
+    -- Fenêtres — splits
+    { "<leader>wv", "<cmd>vsplit<cr>",   "Split vertical" },
+    { "<leader>ws", "<cmd>split<cr>",    "Split horizontal" },
+    { "<leader>wq", "<cmd>close<cr>",    "Fermer fenêtre" },
+    -- Fenêtres — navigation avec <leader>w + direction
+    { "<leader>ww", "<C-w>w",            "Cycle fenêtres" },
+    { "<leader>wh", "<C-w>h",            "Fenêtre gauche" },
+    { "<leader>wl", "<C-w>l",            "Fenêtre droite" },
+    { "<leader>wj", "<C-w>j",            "Fenêtre bas" },
+    { "<leader>wk", "<C-w>k",            "Fenêtre haut" },
+    -- Fenêtres — navigation rapide Ctrl+direction (sans C-h = backspace)
+    { "<C-l>",      "<C-w>l",            "Fenêtre droite" },
+    { "<C-j>",      "<C-w>j",            "Fenêtre bas" },
+    { "<C-k>",      "<C-w>k",            "Fenêtre haut" },
+    -- Focus neo-tree
+    { "<leader>o",  "<cmd>Neotree focus<cr>", "Focus tree" },
     -- Sauvegarder
     { "<C-s>",      "<cmd>w<cr>",                       "Sauvegarder" },
     -- Quitter
     { "<leader>q",  "<cmd>qa<cr>",                      "Quitter" },
+  },
+
+  -- ---------------------------------------------------------------
+  --  NVIM+ — Modules optionnels
+  --  Mettez true/false pour activer ou désactiver chaque addon.
+  --
+  --  ⚠ Copilot et Supermaven font la même chose (IA inline).
+  --    Activez-en UN seul à la fois.
+  -- ---------------------------------------------------------------
+  extras = {
+    copilot    = false,  -- GitHub Copilot    (nécessite abonnement GitHub)
+    supermaven = true,   -- Supermaven AI      (gratuit, très rapide)
+    prettier   = true,   -- Prettier + conform (formatters multi-langages)
+  },
+
+  -- ---------------------------------------------------------------
+  --  LSP — Serveurs à installer et activer
+  --  Ajoutez / commentez selon vos besoins.
+  --  Mason les installe automatiquement au démarrage.
+  --  Chaque serveur ne démarre QUE si le bon type de fichier est ouvert.
+  -- ---------------------------------------------------------------
+  lsp = {
+    servers = {
+      -- Web
+      "html",           -- HTML
+      "cssls",          -- CSS / SCSS
+      "ts_ls",          -- JavaScript / TypeScript
+      "jsonls",         -- JSON
+      -- Backend
+      "pyright",        -- Python
+      "gopls",          -- Go
+      "rust_analyzer",  -- Rust
+      "clangd",         -- C / C++
+      "bashls",         -- Bash / Shell
+      -- Config & DevOps
+      "yamlls",         -- YAML
+      "taplo",          -- TOML
+      "dockerls",       -- Dockerfile
+      -- Markup
+      "marksman",       -- Markdown
+      -- Lua (Neovim)
+      "lua_ls",         -- Lua
+    },
+
+    -- Comportement de l'autocomplétion
+    completion = {
+      -- Nombre max de suggestions affichées
+      max_items = 10,
+      -- Sélectionner automatiquement le premier item
+      preselect = true,
+    },
   },
 }

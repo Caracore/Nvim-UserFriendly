@@ -1,0 +1,92 @@
+-- colors/ember.lua
+-- Thème Ember — Feu et braises, parfait avec le cursor fire 🔥
+local U = require("themes.utils")
+U.init("ember")
+
+local c = {
+  bg          = "#120a08",
+  bg2         = "#1c1008",
+  fg          = "#f0d0b0",
+  fg_dim      = "#9a7060",
+  keyword     = "#ff4500",
+  func        = "#ff8c42",
+  string      = "#ffd166",
+  number      = "#ff6b35",
+  type        = "#e85d04",
+  builtin     = "#ffb347",
+  field       = "#fca652",
+  param       = "#f4a261",
+  operator    = "#ff4500",
+  punct       = "#7a4a38",
+  special     = "#ffd700",
+  comment     = "#5c3022",
+  accent      = "#ff8c42",
+  border      = "#2d1208",
+  selection   = "#2a1208",
+  float_bg    = "#160c08",
+  float_bg2   = "#100a06",
+  sidebar_bg  = "#0e0806",
+  error       = "#ff2020",  warn  = "#ff9900",
+  info        = "#ff8c42",  hint  = "#ffd166",
+  error_bg    = "#2a0808",  warn_bg   = "#2a1808",
+  info_bg     = "#2a1408",  hint_bg   = "#2a2008",
+  git_add     = "#a8d8a8",  git_mod   = "#ff8c42",
+}
+c.cursorline = c.bg2
+c.linenr     = c.comment
+
+U.apply({
+  Normal          = { fg = c.fg,      bg = c.bg },
+  NormalFloat     = { fg = c.fg,      bg = c.float_bg },
+  NormalNC        = { fg = c.fg_dim,  bg = c.bg },
+  LineNr          = { fg = c.linenr },
+  CursorLine      = { bg = c.cursorline },
+  CursorLineNr    = { fg = c.accent,  bold = true },
+  SignColumn      = { bg = c.bg },
+  ColorColumn     = { bg = c.bg2 },
+  VertSplit       = { fg = c.border },
+  WinSeparator    = { fg = c.border },
+  Pmenu           = { fg = c.fg,      bg = c.float_bg },
+  PmenuSel        = { fg = c.bg,      bg = c.accent,  bold = true },
+  PmenuSbar       = { bg = c.bg2 },
+  PmenuThumb      = { bg = c.accent },
+  Search          = { fg = c.bg,      bg = c.accent },
+  IncSearch       = { fg = c.bg,      bg = c.keyword, bold = true },
+  Visual          = { bg = c.selection },
+  MatchParen      = { fg = c.accent,  bold = true, underline = true },
+  StatusLine      = { fg = c.fg,      bg = c.bg2 },
+  StatusLineNC    = { fg = c.fg_dim,  bg = c.bg2 },
+  TabLine         = { fg = c.fg_dim,  bg = c.bg2 },
+  TabLineSel      = { fg = c.accent,  bg = c.bg,  bold = true },
+  TabLineFill     = { bg = c.bg2 },
+  WildMenu        = { fg = c.bg,      bg = c.accent },
+  Folded          = { fg = c.comment, bg = c.bg2 },
+  FoldColumn      = { fg = c.comment, bg = c.bg },
+  Comment         = { fg = c.comment, italic = true },
+  Constant        = { fg = c.number },
+  String          = { fg = c.string },
+  Character       = { fg = c.string },
+  Number          = { fg = c.number },
+  Boolean         = { fg = c.keyword, bold = true },
+  Float           = { fg = c.number },
+  Identifier      = { fg = c.fg },
+  Function        = { fg = c.func,    bold = true },
+  Statement       = { fg = c.keyword },
+  Keyword         = { fg = c.keyword, bold = true },
+  Operator        = { fg = c.operator },
+  Type            = { fg = c.type },
+  Special         = { fg = c.special },
+  Underlined      = { underline = true },
+  Error           = { fg = c.error,   bold = true },
+  Todo            = { fg = c.bg,      bg = c.accent, bold = true },
+  IndentBlanklineChar           = { fg = c.border },
+  IndentBlanklineContextChar    = { fg = c.accent },
+  AlphaHeader  = { fg = c.accent },
+  AlphaFooter  = { fg = c.comment },
+  AlphaButtons = { fg = c.string },
+})
+
+U.apply(U.treesitter(c))
+U.apply(U.lsp(c))
+U.apply(U.telescope(c))
+U.apply(U.neotree(c))
