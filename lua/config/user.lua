@@ -68,6 +68,20 @@ return {
   },
 
   -- ---------------------------------------------------------------
+  --  SAUVEGARDE
+  -- ---------------------------------------------------------------
+  save = {
+    -- Notification visuelle après sauvegarde (style LazyVim, en bas)
+    notify = true,
+
+    -- Son à la sauvegarde
+    --   false      → silence
+    --   "bell"     → bip terminal (universel)
+    --   "system"   → son système Linux (paplay/aplay)
+    sound = "bell",
+  },
+
+  -- ---------------------------------------------------------------
   --  ÉDITEUR
   -- ---------------------------------------------------------------
   editor = {

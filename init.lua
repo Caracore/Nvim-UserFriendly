@@ -49,3 +49,49 @@ end
 -- Ctrl+S en insertion et visuel (write sans quitter le mode)
 vim.keymap.set("i", "<C-s>", "<cmd>write<cr>", { desc = "Sauvegarder", silent = true })
 vim.keymap.set("v", "<C-s>", "<cmd>write<cr>", { desc = "Sauvegarder", silent = true })
+
+-- Notification + son après chaque sauvegarde
+vim.api.nvim_create_autocmd("BufWritePost", {
+  callback = function()
+    local S = U.save
+
+    -- Notification visuelle
+    if S.notify then
+      local fname = vim.fn.expand("%:t")
+      vim.notify(
+        "  " .. fname .. " sauvegardé",
+        vim.log.levels.INFO,
+        { title = "Sauvegarde", timeout = 1500 }
+      )
+    end
+
+    -- Son
+    if S.sound == "bell" then
+      io.write("\a")          -- bip terminal universel
+      io.flush()
+    elseif S.sound == "system" then
+      local sounds = {
+        "/usr/share/sounds/freedesktop/stereo/message.oga",
+        "/usr/share/sounds/freedesktop/stereo/bell.oga",
+        "/usr/share/sounds/sound-icons/message.wav",
+      }
+      if vim.fn.executable("paplay") == 1 then
+        for _, f in ipairs(sounds) do
+          if vim.fn.filereadable(f) == 1 then
+            vim.fn.system("paplay " .. f .. " &")
+            break
+          end
+        end
+      elseif vim.fn.executable("aplay") == 1 then
+        for _, f in ipairs(sounds) do
+          if vim.fn.filereadable(f) == 1 then
+            vim.fn.system("aplay -q " .. f .. " &")
+            break
+          end
+        end
+      else
+        io.write("\a") io.flush()   -- fallback bell
+      end
+    end
+  end,
+})

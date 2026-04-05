@@ -53,10 +53,26 @@ return {
           width    = U.tree.width,
         },
         filesystem = {
-          follow_current_file    = { enabled = true },
-          hijack_netrw_behavior  = "open_current",
+          follow_current_file   = { enabled = true },
+          hijack_netrw_behavior = "open_current",
+        },
+        event_handlers = {
+          {
+            event   = "neo_tree_window_after_open",
+            handler = function(args)
+              vim.wo[args.winid].winbar = "%#NeoTreeWinBar#  Explorer"
+            end,
+          },
         },
       }
+    end,
+    config = function(_, opts)
+      -- Couleur du winbar Explorer (suit le thème)
+      vim.api.nvim_set_hl(0, "NeoTreeWinBar", {
+        fg   = "#a0a0c0",
+        bold = true,
+      })
+      require("neo-tree").setup(opts)
     end,
   },
 }
